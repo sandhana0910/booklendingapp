@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Purchases</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #results {
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Search Book Purchases</h2>
+        <input type="text" id="borrowerName" placeholder="Enter Borrower Name" required>
+        <button onclick="searchPurchase()">Search</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function searchPurchase() {
+            const borrowerName = document.getElementById('borrowerName').value;
+            if (!borrowerName) {
+                alert("Please enter a borrower name!");
+                return;
+            }
+
+            fetch(`/search-purchase?borrowerName=${encodeURIComponent(borrowerName)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const resultsDiv = document.getElementById('results');
+                    resultsDiv.innerHTML = '';
+
+                    if (data.message) {
+                        resultsDiv.innerHTML = `<p>${data.message}</p>`;
+                        return;
+                    }
+
+                    data.forEach(purchase => {
+                        resultsDiv.innerHTML += `
+                            <div style="border-bottom: 1px solid #ccc; padding: 10px;">
+                                <p><strong>Borrower:</strong> ${purchase.borrowerName}</p>
+                                <p><strong>Book:</strong> ${purchase.bookName}</p>
+                                <p><strong>Purchase Date:</strong> ${new Date(purchase.purchaseDateTime).toLocaleString()}</p>
+                            </div>
+                        `;
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+    </script>
+</body>
+</html>

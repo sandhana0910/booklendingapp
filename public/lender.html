@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lender Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .header {
+            background-color: #f4f4f9;
+            color: black;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            margin-top: 80px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .send-message-container, #showMessageSection {
+            width: 90px;
+            height: 60px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .send-message-container:hover, #showMessageSection:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container {
+            margin: 20px auto;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .message-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .message-modal h3 {
+            margin-bottom: 20px;
+        }
+
+        .message-modal p {
+            font-size: 1rem;
+            margin: 20px 0;
+        }
+
+        .close-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .close-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .suggested-books {
+            margin-top: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .book-container {
+            width: 200px;
+            text-align: center;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .book-container:hover {
+            transform: scale(1.05);
+        }
+
+        .book-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .book-title {
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .book-author {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .upload-form {
+            margin: 40px auto;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Lender Dashboard</h1>
+    </header>
+    <main>
+        <div class="action-buttons">
+            <div class="send-message-container" onclick="toggleFormContainer()">
+                <span>Message</span>
+            </div>
+            <div id="showMessageSection" onclick="showMessageSection()">
+                Notification
+            </div>
+        </div>
+
+        <div class="form-container" id="formContainer">
+            <input type="text" id="messageToBorrower" placeholder="Enter your message here" />
+            <button id="sendMessageToBorrower">Send Message</button>
+        </div>
+
+        <h1>Suggested Books</h1>
+        <div class="suggested-books">
+            <div class="book-container">
+                <img src="/images/computerbook.jpeg" alt="Book 1">
+                <div class="book-title">AI</div>
+                <div class="book-author">Vinod & Anand</div>
+            </div>
+            <div class="book-container">
+                <img src="/images/it.jpeg" alt="Book 2">
+                <div class="book-title">I.T.Hub</div>
+                <div class="book-author">vinay</div>
+            </div>
+            <div class="book-container">
+                <img src="/images/python.jpeg" alt="Book 3">
+                <div class="book-title">Python</div>
+                <div class="book-author">Sathish & Singh</div>
+            </div>
+        </div>
+
+        <h1>Popular Books</h1>
+        <div class="suggested-books">
+            <div class="book-container">
+                <img src="/images/lord.jpeg" alt="Book 1">
+                <div class="book-title">Lord of the Rings</div>
+                <div class="book-author">J.R.R</div>
+            </div>
+            <div class="book-container">
+                <img src="/images/wat.jpeg" alt="Book 2">
+                <div class="book-title">What Happened</div>
+                <div class="book-author">Hillary</div>
+            </div>
+            <div class="book-container">
+                <img src="/images/little.jpeg" alt="Book 3">
+                <div class="book-title">Little Women</div>
+                <div class="book-author">Louriya</div>
+            </div>
+        </div>
+
+        <h1>Upload New Book</h1>
+        <form class="upload-form" action="/upload" method="POST" enctype="multipart/form-data">
+            <label for="title">Book Title:</label>
+            <input type="text" name="title" placeholder="Book Title" required>
+            <label for="author">Author:</label>
+            <input type="text" name="author" placeholder="Author" required>
+            <label for="bookImage">Book Image:</label>
+            <input type="file" name="bookImage" accept="image/*" required>
+            <button type="submit">Upload Book</button>
+        </form>
+    </main>
+    <h1>BookList</h1>
+    <div class="suggested-books" id="bookList"></div>
+    
+    <div id="messageModal" class="message-modal">
+        <h3>Message from Borrower</h3>
+        <p id="messageContent"></p>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+
+    <script>
+        function toggleFormContainer() {
+            const formContainer = document.getElementById('formContainer');
+            formContainer.style.display = formContainer.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.getElementById('sendMessageToBorrower').addEventListener('click', () => {
+            const messageToBorrower = document.getElementById('messageToBorrower').value;
+            if (messageToBorrower) {
+                localStorage.setItem('messageToBorrower', messageToBorrower);
+                alert('Message sent to Borrower!');
+                document.getElementById('messageToBorrower').value = '';
+                toggleFormContainer();
+            } else {
+                alert('Please enter a message.');
+            }
+        });
+
+        function showMessageSection() {
+            document.getElementById('messageModal').style.display = 'block';
+            const fullMessage = localStorage.getItem('messageToLender');
+            document.getElementById('messageContent').textContent = fullMessage || 'No message from Borrower yet.';
+        }
+
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+    fetch('/books')
+        .then(response => response.json())
+        .then(books => {
+            const bookContainer = document.getElementById('bookList');
+            bookContainer.innerHTML = ''; // Clear any existing books
+
+            books.forEach(book => {
+                const bookElement = document.createElement('div');
+                bookElement.classList.add('book-container');
+                bookElement.innerHTML = `
+                    <img src="${book.image}" alt="${book.title}">
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">${book.author}</div>
+                `;
+                bookContainer.appendChild(bookElement);
+            });
+        })
+        .catch(error => console.error('Error fetching books:', error));
+});
+
+    </script>
+</body>
+</html>

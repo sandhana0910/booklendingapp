@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borrower Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .header {
+            background-color: #f4f4f9;
+            color: black;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            margin-top: 80px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .send-message-container, #showMessageSection {
+            width: 90px;
+            height: 60px;
+            background-color: #28a745;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1rem;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .send-message-container:hover, #showMessageSection:hover {
+            background-color: #218838;
+        }
+
+        .form-container {
+            margin: 20px auto;
+            max-width: 400px;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .message-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .message-modal h3 {
+            margin-bottom: 20px;
+        }
+
+        .message-modal p {
+            font-size: 1rem;
+            margin: 20px 0;
+        }
+
+        .close-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .close-btn:hover {
+            background-color: #218838;
+        }
+
+        .suggested-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+        }
+
+        .suggested-section h1 {
+            margin-right: 20px;
+        }
+
+        .buy-container {
+            width: 80px;
+            padding: 10px;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .buy-container:hover {
+            background-color: #0056b3;
+        }
+
+        .suggested-books {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .book-container {
+            width: 200px;
+            text-align: center;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .book-container:hover {
+            transform: scale(1.05);
+        }
+
+        .book-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .book-title {
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .book-author {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        .search-profile-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 40px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-books, .profile-input {
+    padding: 12px 15px;
+    font-size: 1rem;
+    width: 280px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+}
+
+.search-books:focus, .profile-input:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+.search-books::placeholder, .profile-input::placeholder {
+    color: #888;
+    font-style: italic;
+}
+
+.search-books-btn, .search-profile-btn {
+    padding: 12px 18px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.search-books-btn:hover, .search-profile-btn:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+.search-books-btn:active, .search-profile-btn:active {
+    transform: scale(1);
+}
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Borrower Dashboard</h1>
+    </header>
+    <main>
+        <div class="action-buttons">
+            <div class="send-message-container" onclick="toggleFormContainer()">
+                <span>Message</span>
+            </div>
+            <div id="showMessageSection" onclick="showMessageSection()">
+                Notification
+            </div>
+        </div>
+
+        <div class="form-container" id="formContainer">
+            <input type="text" id="messageToLender" placeholder="Enter your message here" />
+            <button id="sendMessageToLender">Send Message</button>
+        </div>
+
+        <div class="suggested-section">
+            <h1>Suggested Books</h1>
+            <div class="buy-container" onclick="showBuyForm()">Buy</div>
+        </div>
+
+        <div class="suggested-books">
+            <div class="book-container">
+                <img src="/images/computerbook.jpeg" alt="Book 1">
+                <div class="book-title">AI</div>
+                <div class="book-author">Vinod & Anand</div>
+            </div>
+            <div class="book-container">
+                <img src="/images/it.jpeg" alt="Book 2">
+                <div class="book-title">I.T.Hub</div>
+                <div class="book-author">Vinay</div>
+            </div>
+            <div class="book-container">
+                <img src="/images/python.jpeg" alt="Book 3">
+                <div class="book-title">Python</div>
+                <div class="book-author">Sathish & Singh</div>
+            </div>
+        </div>
+        <h1>Popular Books</h1>
+        <div class="suggested-books">
+            <div class="book-container">
+                <img src="/images/lord.jpeg" alt="Book 1">
+                <div class="book-title">Lord of the Rings</div>
+                <div class="book-author">J.R.R</div>
+            </div>
+            <div class="book-container">
+                <img src="/images/wat.jpeg" alt="Book 2">
+                <div class="book-title">What Happened</div>
+                <div class="book-author">Hillary</div>
+            </div>
+            <div class="book-container">
+                <img src="/images/little.jpeg" alt="Book 3">
+                <div class="book-title">Little Women</div>
+                <div class="book-author">Louriya</div>
+            </div>
+        </div>
+    </main>
+
+    <div id="messageModal" class="message-modal">
+        <h3>Message from Lender</h3>
+        <p id="messageContent"></p>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+
+    <div id="buyFormModal" class="message-modal">
+        <h3>Buy Book</h3>
+        <form id="buyForm" action="/buy" method="post">
+            <input type="text" id="borrowerName" name="borrowerName" placeholder="Name of the Borrower" required />
+            <input type="text" id="bookName" name="bookName" placeholder="Name of the Book" required />
+            <input type="datetime-local" id="purchaseDateTime" name="purchaseDateTime" required />
+            <button type="submit">Submit</button>
+        </form>
+        
+    </div>
+    
+    <div class="search-profile-container">
+        <input type="text" id="searchBooksInput" class="search-books" placeholder="Search for books...">
+        <button class="search-books-btn" onclick="searchBooks()">Search</button>
+    
+        <button class="search-profile-btn" onclick="window.location.href='search-purchase.html'">Search Profile</button>
+
+
+    </div>
+    
+
+    
+
+    <script>
+        function toggleFormContainer() {
+            const formContainer = document.getElementById('formContainer');
+            formContainer.style.display = formContainer.style.display === 'block' ? 'none' : 'block';
+        }
+
+        document.getElementById('sendMessageToLender').addEventListener('click', () => {
+            const messageToLender = document.getElementById('messageToLender').value;
+            if (messageToLender) {
+                localStorage.setItem('messageToLender', messageToLender);
+                alert('Message sent to Lender!');
+                document.getElementById('messageToLender').value = '';
+                toggleFormContainer();
+            } else {
+                alert('Please enter a message.');
+            }
+        });
+
+        function showMessageSection() {
+            document.getElementById('messageModal').style.display = 'block';
+            const fullMessage = localStorage.getItem('messageToBorrower');
+            document.getElementById('messageContent').textContent = fullMessage || 'No message from Lender yet.';
+        }
+
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+        }
+
+        function showBuyForm() {
+            document.getElementById('buyFormModal').style.display = 'block';
+        }
+
+        document.getElementById('buyForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const borrowerName = document.getElementById('borrowerName').value;
+            const bookName = document.getElementById('bookName').value;
+            const purchaseDateTime = document.getElementById('purchaseDateTime').value;
+
+            if (borrowerName && bookName && purchaseDateTime) {
+                alert('Form submitted successfully!');
+                document.getElementById('buyFormModal').style.display = 'none';
+            } else {
+                alert('Please fill in all fields.');
+            }
+        });
+
+        function closeBuyForm() {
+            document.getElementById('buyFormModal').style.display = 'none';
+        }
+        function showBuyForm() {
+    window.location.href = '/buy.html'; // Redirects to the buy page
+}
+function searchBooks() {
+    const query = document.getElementById('searchBooksInput').value.trim();
+    if (!query) {
+        alert('Please enter a book name to search.');
+        return;
+    }
+
+    fetch(`/search-books?query=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(books => {
+            const resultsContainer = document.querySelector('.suggested-books');
+            resultsContainer.innerHTML = ''; // Clear existing books
+
+            if (books.length === 0) {
+                resultsContainer.innerHTML = '<p>No books found.</p>';
+                return;
+            }
+
+            books.forEach(book => {
+                const bookElement = `
+                    <div class="book-container">
+                        <img src="/${book.image}" alt="${book.title}">
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-author">${book.author}</div>
+                    </div>`;
+                resultsContainer.innerHTML += bookElement;
+            });
+        })
+        .catch(error => console.error('Error fetching books:', error));
+}
+
+function searchProfiles() {
+    const query = document.getElementById('searchProfileInput').value.trim();
+    if (!query) {
+        alert('Please enter a profile name or email to search.');
+        return;
+    }
+
+    fetch(`/search-profiles?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            const resultsContainer = document.getElementById('profileResults');
+            resultsContainer.innerHTML = '';
+
+            if (data.mongoResults.length === 0 && data.mysqlResults.length === 0) {
+                resultsContainer.innerHTML = '<p>No profiles found.</p>';
+                return;
+            }
+
+            data.mongoResults.forEach(user => {
+                resultsContainer.innerHTML += `
+                    <div class="profile-container">
+                        <p><strong>Name:</strong> ${user.name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Role:</strong> ${user.role}</p>
+                        <hr>
+                    </div>`;
+            });
+
+            data.mysqlResults.forEach(user => {
+                resultsContainer.innerHTML += `
+                    <div class="profile-container">
+                        <p><strong>Name:</strong> ${user.name}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>Role:</strong> ${user.role}</p>
+                        <hr>
+                    </div>`;
+            });
+        })
+        .catch(error => console.error('Error fetching profiles:', error));
+}
+
+
+    </script>
+</body>
+</html>
